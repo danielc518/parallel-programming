@@ -1,0 +1,1 @@
+To compile the codes, simply execute "javac" for each of the codes.
