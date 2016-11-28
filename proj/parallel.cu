@@ -4,7 +4,6 @@
 #include <cuda.h>
 
 #define n 3 // number of dimensions
-#define blocks 3 // number of blocks
 
 using namespace std;
 
@@ -77,7 +76,7 @@ __global__ void computeMu(float* v, float* u, float* d_mu, int m)
 	}
 }
 
-void applyGramSchmidt(float* v, float* u) 
+void applyGramSchmidt(float* v, float* u, int blocks) 
 {
 	float *d_v, *d_u, *d_mu, *d_r;
 
@@ -150,6 +149,8 @@ int main(int argc, char *argv[])
 {
 	srand(1);
 
+	const int blocks = atoi(argv[1]);
+
 	float* v = new float[n*n];
 	float* u = new float[n*n];
 
@@ -163,7 +164,7 @@ int main(int argc, char *argv[])
 
 	auto startTime = chrono::high_resolution_clock::now();
 
-	applyGramSchmidt(v, u);
+	applyGramSchmidt(v, u, blocks);
 
 	auto endTime = chrono::high_resolution_clock::now();
 	auto time = endTime - startTime;
