@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
 	cout << sec << endl;
 
-	// print(u, numDim);
+	print(u, numDim);
 
 	for (int i = 0; i < numDim; i++)
 	{
