@@ -8,14 +8,22 @@ using namespace std;
 
 float innerProduct(float* a, float* b, const int n)
 {
-	float sum = 0.0;
+	float sum1 = 0.0;
+	float sum2 = 0.0;
+	float sum3 = 0.0;
+	float sum4 = 0.0;
+	float sum5 = 0.0;
 
-	for (int i = 0; i < n; i++) 
+	for (int i = 0; i < n; i+=5) 
 	{
-		sum += (a[i] * b[i]);
+		sum1 += (a[i] * b[i]);
+		sum2 += (a[i+1] * b[i+1]);
+		sum3 += (a[i+2] * b[i+2]);
+		sum4 += (a[i+3] * b[i+3]);
+		sum5 += (a[i+4] * b[i+4]);
 	}
 
-	return sum;
+	return sum1 + sum2 + sum3 + sum4 + sum5;
 }
 
 void applyGramSchmidt(float** v, float** u, const int n, const int threads) 
