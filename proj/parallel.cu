@@ -3,7 +3,7 @@
 #include <chrono>
 #include <cuda.h>
 
-#define n 3 // number of dimensions
+#define n 512 // number of dimensions for input vector
 
 using namespace std;
 
@@ -93,15 +93,11 @@ void applyGramSchmidt(float* v, float* u, int blocks)
 	cudaMemcpy(d_v, v, matrixSize, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_u, d_v, n*sizeof(float), cudaMemcpyDeviceToDevice);
 
-	cudaDeviceSynchronize();
-
 	for (int m = 1; m < n; m++)
 	{
 		cudaMemcpy(d_u+m*n, d_v+m*n, n*sizeof(float), cudaMemcpyDeviceToDevice);
 
 		computeMu<<<m,n>>>(d_v, d_u, d_mu, m);
-
-		cudaDeviceSynchronize();
 
 		int numBlocks = m < blocks ? m : blocks;
 
@@ -109,11 +105,7 @@ void applyGramSchmidt(float* v, float* u, int blocks)
 
 		aggregate<<<numBlocks,1>>>(d_u, d_mu, chunk, m, d_r);
 
-		cudaDeviceSynchronize();
-
 		finalize<<<1,1>>>(d_u, d_r, m, numBlocks);
-
-		cudaDeviceSynchronize();
 	}
 
 	cudaMemcpy(u, d_u, matrixSize, cudaMemcpyDeviceToHost);
@@ -173,7 +165,7 @@ int main(int argc, char *argv[])
 
 	cout << sec << endl;
 
-	print(u);
+	// print(u);
 
 	delete[] u;
 	delete[] v;
