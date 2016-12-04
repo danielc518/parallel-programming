@@ -4,14 +4,15 @@ public class Serial {
 
 	public static void main(String[] args) {
 
-		// Create random number generator for input data
+		// Initialize random number generator
 		final Random random = new Random(31);
 
-		// Get number of dimensions for each vector
+		// Get number of dimensions for each vector from command line
 		final int numDim = Integer.parseInt(args[0]);
 
-		final double[][] v = new double[numDim][numDim]; // Input data
-		final double[][] u = new double[numDim][numDim]; // Output data (i.e. orthogonalized)
+		// Initialize matrices (collection of row vectors) 'v' and 'u'
+		final double[][] v = new double[numDim][numDim];
+		final double[][] u = new double[numDim][numDim];
 
 		// Create artificial input data
 		for (int i = 0; i < numDim; i++) {
@@ -20,14 +21,18 @@ public class Serial {
 			}
 		}
 
+		// Record start time
 		long startTime = System.nanoTime();
 
+		// Begin Gram-Schmidt process
 		applyGramSchmidt(v, u, numDim);
 
+		// Measure total elapsed time (in seconds)
 		long elapsed = System.nanoTime() - startTime;
 
 		double seconds = (double) elapsed / 1000000000.0;
 
+		// Output time
 		System.out.println(seconds);
 
 		// print(u, numDim);

@@ -5,28 +5,38 @@ public class Parallel {
 
 	public static void main(String[] args) {
 
+		// Initialize random number generator
 		final Random random = new Random(31);
 
+		// Get number of dimenions from command line
 		final int numDim = Integer.parseInt(args[0]);
+
+		// Get maximum number of threads to use from command line
 		final int maxThreads = Integer.parseInt(args[1]);
 
+		// Initialize matrices (collection of row vectors) 'v' and 'u'
 		final double[][] v = new double[numDim][numDim];
 		final double[][] u = new double[numDim][numDim];
 
+		// Fill input matrix 'v' with random numbers
 		for (int i = 0; i < numDim; i++) {
 			for (int j = 0; j < numDim; j++) {
 				v[i][j] = random.nextDouble();
 			}
 		}
 
+		// Record start time
 		long startTime = System.nanoTime();
 
+		// Begin Gram-Schmidt process
 		applyGramSchmidt(v, u, numDim, maxThreads);
 
+		// Measure total elapsed time (in seconds)
 		long elapsed = System.nanoTime() - startTime;
 
 		double seconds = (double) elapsed / 1000000000.0;
 
+		// Output time
 		System.out.println(seconds);
 
 		// print(u, numDim);
@@ -138,18 +148,22 @@ public class Parallel {
 		public void run() {
 			Arrays.fill(results, 0.0);
 			
+			// Determine which portion of the summation this thread will compute
 			int begin = id * chunk;
 			int end = Math.min(m, (id + 1) * chunk);
 			
+			// Compute summation for this thread's portion
 			for (int i = begin; i < end; i++) {
 				double mu = innerProduct(u[i], v, n);
 
+				// Cache newly computed inner products
 				if (i == m - 1) {
 					cache[i] = innerProduct(u[i], u[i], n);
 				}
 
 				mu /= cache[i];
 
+				// Store intermediate results (i.e. partial summation)
 				for (int j = 0; j < n; j++) {
 					results[j] += (mu * u[i][j]);
 				}
